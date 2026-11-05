@@ -1,0 +1,9 @@
+{
+  "request": "GET https://api.github.com/repos/Darik097/LR6",
+  "http_status": 200,
+  "full_name": "Darik097/LR6",
+  "fork": true,
+  "parent": "Kurtyanik/LR6",
+  "default_branch": "master",
+  "html_url": "https://github.com/Darik097/LR6"
+}
