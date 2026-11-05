@@ -1,0 +1,218 @@
+$ git config user.name '4517 Дарский Д. М.'
+
+$ git config user.email 150348428+Darik097@users.noreply.github.com
+
+$ git pull --ff-only origin master
+From https://github.com/Darik097/LR6
+ * branch            master     -> FETCH_HEAD
+   921f53b..72ad046  master     -> origin/master
+Updating 921f53b..72ad046
+Fast-forward
+ github-note.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+ create mode 100644 github-note.md
+
+$ git branch --track branch1 origin/branch1
+branch 'branch1' set up to track 'origin/branch1'.
+
+$ git log master --oneline
+72ad046 Create github-note.mdДобавить файл через интерфейс GitHub
+921f53b Обновление информации
+c08a654 Файл создан пустым
+3c6e913 Initial commit
+
+$ git log branch1 --oneline
+0f9f50d Заполнил файл
+c08a654 Файл создан пустым
+3c6e913 Initial commit
+
+$ git show --stat HEAD
+commit 72ad046bd77421e9d90727deb097f298c366507c
+Author: Darik097 <150348428+Darik097@users.noreply.github.com>
+Date:   Thu Nov 5 16:41:43 2026 +0300
+
+    Create github-note.mdДобавить файл через интерфейс GitHub
+
+ github-note.md | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+$ git diff master branch1 -- mergefile.txt
+diff --git a/mergefile.txt b/mergefile.txt
+index 6c1c959..39c9730 100644
+--- a/mergefile.txt
++++ b/mergefile.txt
+@@ -1,5 +1,6 @@
+ Файл
+ заполнен
+-очень
+-важной
+ информацией
++противоречащей
++ветке
++master
+
+$ git merge branch1
+Auto-merging mergefile.txt
+CONFLICT (content): Merge conflict in mergefile.txt
+Automatic merge failed; fix conflicts and then commit the result.
+
+$ git status --short
+UU mergefile.txt
+?? evidence/
+
+$ git diff --cc -- mergefile.txt
+diff --cc mergefile.txt
+index 6c1c959,39c9730..0000000
+--- a/mergefile.txt
++++ b/mergefile.txt
+@@@ -1,5 -1,6 +1,12 @@@
+  Файл
+  заполнен
+++<<<<<<< HEAD
+ +очень
+ +важной
+ +информацией
+++=======
++ информацией
++ противоречащей
++ ветке
++ master
+++>>>>>>> branch1
+
+$ git add mergefile.txt
+
+$ git commit -m 'Слить branch1 в master и согласовать противоречащую информацию'
+[master afece0e] Слить branch1 в master и согласовать противоречащую информацию
+
+$ git branch -d branch1
+Deleted branch branch1 (was 0f9f50d).
+
+$ git show --format=fuller --stat HEAD
+commit afece0e80b17ff19d1c8ae2eae1eacae4a8db65a
+Merge: 72ad046 0f9f50d
+Author:     4517 Дарский Д. М. <150348428+Darik097@users.noreply.github.com>
+AuthorDate: Thu Nov 5 16:42:49 2026 +0300
+Commit:     4517 Дарский Д. М. <150348428+Darik097@users.noreply.github.com>
+CommitDate: Thu Nov 5 16:42:49 2026 +0300
+
+    Слить branch1 в master и согласовать противоречащую информацию
+
+ mergefile.txt | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+$ git rev-list --parents -n 1 HEAD
+afece0e80b17ff19d1c8ae2eae1eacae4a8db65a 72ad046bd77421e9d90727deb097f298c366507c 0f9f50db68a6983b47398017545532cd0f992846
+
+$ git add git-notes.md
+
+$ git commit -m 'Добавить определения рабочего дерева индекса и коммита'
+[master 5321882] Добавить определения рабочего дерева индекса и коммита
+ 1 file changed, 6 insertions(+)
+ create mode 100644 git-notes.md
+
+$ git diff -- git-notes.md
+diff --git a/git-notes.md b/git-notes.md
+index 8cb9af1..c9e1382 100644
+--- a/git-notes.md
++++ b/git-notes.md
+@@ -4,3 +4,16 @@
+ - Индекс хранит подготовленное содержимое следующего коммита.
+ - Коммит фиксирует снимок проекта, автора, время и сообщение.
+ - Ветка — перемещаемый указатель на коммит; HEAD указывает на текущую ветку.
++
++## Безопасный рабочий цикл
++
++1. Проверить состояние: `git status`.
++2. Изучить изменения: `git diff`.
++3. Подготовить нужные файлы: `git add <файл>`.
++4. Проверить индекс: `git diff --cached`.
++5. Зафиксировать результат: `git commit -m "Содержательное сообщение"`.
++6. Получить изменения: `git pull --ff-only`, отправить: `git push`.
++
++`git fetch` обновляет ссылки на удалённые ветки, не изменяя рабочее дерево.
++`git pull` получает изменения и интегрирует их в текущую ветку.
++`git revert` создаёт обратный коммит и сохраняет историю; `git reset` перемещает указатель.
+
+$ git add git-notes.md
+
+$ git commit -m 'Описать рабочий цикл и отличие revert от reset'
+[master 21fdadc] Описать рабочий цикл и отличие revert от reset
+ 1 file changed, 13 insertions(+)
+
+$ git add temporary-experiment.txt
+
+$ git commit -m 'Добавить временный эксперимент для проверки отката'
+[master a07a517] Добавить временный эксперимент для проверки отката
+ 1 file changed, 2 insertions(+)
+ create mode 100644 temporary-experiment.txt
+
+$ git revert --no-edit HEAD
+[master 300e9f2] Revert "Добавить временный эксперимент для проверки отката"
+ Date: Thu Nov 5 16:43:15 2026 +0300
+ 1 file changed, 2 deletions(-)
+ delete mode 100644 temporary-experiment.txt
+
+$ git log -4 --oneline
+300e9f2 Revert "Добавить временный эксперимент для проверки отката"
+a07a517 Добавить временный эксперимент для проверки отката
+21fdadc Описать рабочий цикл и отличие revert от reset
+5321882 Добавить определения рабочего дерева индекса и коммита
+
+$ git ls-files temporary-experiment.txt
+
+$ git switch -c report
+Switched to a new branch 'report'
+
+$ git add README.md .gitignore evidence/screenshots/01_fork.png evidence/screenshots/02_github_file.png
+
+$ git commit -m 'Начать README отчёт и добавить подтверждения Fork и веб-коммита'
+[report e148184] Начать README отчёт и добавить подтверждения Fork и веб-коммита
+ 4 files changed, 40 insertions(+), 2 deletions(-)
+ create mode 100644 .gitignore
+ create mode 100644 evidence/screenshots/01_fork.png
+ create mode 100644 evidence/screenshots/02_github_file.png
+
+$ git --version
+git version 2.50.1 (Apple Git-155)
+
+$ git remote -v
+origin	https://github.com/Darik097/LR6.git (fetch)
+origin	https://github.com/Darik097/LR6.git (push)
+
+$ git config --local --get user.name
+4517 Дарский Д. М.
+
+$ git config --local --get user.email
+150348428+Darik097@users.noreply.github.com
+
+$ git add README.md evidence/screenshots/03_conflict.png evidence/screenshots/04_revert.png evidence/logs/github-api.json
+
+$ git commit -m 'Дополнить отчёт разбором конфликта откатом и проверкой API'
+[report b4202e0] Дополнить отчёт разбором конфликта откатом и проверкой API
+ 4 files changed, 76 insertions(+), 1 deletion(-)
+ create mode 100644 evidence/logs/github-api.json
+ create mode 100644 evidence/screenshots/03_conflict.png
+ create mode 100644 evidence/screenshots/04_revert.png
+
+$ git log --all --graph --date=short '--pretty=format:%h | %ad | %an | %s'
+* b4202e0 | 2026-11-05 | 4517 Дарский Д. М. | Дополнить отчёт разбором конфликта откатом и проверкой API
+* e148184 | 2026-11-05 | 4517 Дарский Д. М. | Начать README отчёт и добавить подтверждения Fork и веб-коммита
+* 300e9f2 | 2026-11-05 | 4517 Дарский Д. М. | Revert "Добавить временный эксперимент для проверки отката"
+* a07a517 | 2026-11-05 | 4517 Дарский Д. М. | Добавить временный эксперимент для проверки отката
+* 21fdadc | 2026-11-05 | 4517 Дарский Д. М. | Описать рабочий цикл и отличие revert от reset
+* 5321882 | 2026-11-05 | 4517 Дарский Д. М. | Добавить определения рабочего дерева индекса и коммита
+*   afece0e | 2026-11-05 | 4517 Дарский Д. М. | Слить branch1 в master и согласовать противоречащую информацию
+|\  
+| * 0f9f50d | 2020-11-21 | Kurtyanik | Заполнил файл
+* | 72ad046 | 2026-11-05 | Darik097 | Create github-note.mdДобавить файл через интерфейс GitHub
+* | 921f53b | 2020-11-21 | Kurtyanik | Обновление информации
+|/  
+* c08a654 | 2020-11-21 | Kurtyanik | Файл создан пустым
+* 3c6e913 | 2020-11-21 | Kurtyanik | Initial commit
+$ git push -u origin master report
+To https://github.com/Darik097/LR6.git
+   72ad046..300e9f2  master -> master
+ * [new branch]      report -> report
+branch 'master' set up to track 'origin/master'.
+branch 'report' set up to track 'origin/report'.
+

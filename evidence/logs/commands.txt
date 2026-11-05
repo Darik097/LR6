@@ -1,0 +1,41 @@
+git clone https://github.com/Darik097/LR6.git
+git config user.name '4517 Дарский Д. М.'
+git config user.email 150348428+Darik097@users.noreply.github.com
+git pull --ff-only origin master
+git branch --track branch1 origin/branch1
+git log master --oneline
+git log branch1 --oneline
+git show --stat HEAD
+git diff master branch1 -- mergefile.txt
+git merge branch1
+git status --short
+git diff --cc -- mergefile.txt
+git add mergefile.txt
+git commit -m 'Слить branch1 в master и согласовать противоречащую информацию'
+git branch -d branch1
+git show --format=fuller --stat HEAD
+git rev-list --parents -n 1 HEAD
+git add git-notes.md
+git commit -m 'Добавить определения рабочего дерева индекса и коммита'
+git diff -- git-notes.md
+git add git-notes.md
+git commit -m 'Описать рабочий цикл и отличие revert от reset'
+git add temporary-experiment.txt
+git commit -m 'Добавить временный эксперимент для проверки отката'
+git revert --no-edit HEAD
+git log -4 --oneline
+git ls-files temporary-experiment.txt
+git switch -c report
+git add README.md .gitignore evidence/screenshots/01_fork.png evidence/screenshots/02_github_file.png
+git commit -m 'Начать README отчёт и добавить подтверждения Fork и веб-коммита'
+git --version
+git remote -v
+git config --local --get user.name
+git config --local --get user.email
+git add README.md evidence/screenshots/03_conflict.png evidence/screenshots/04_revert.png evidence/logs/github-api.json
+git commit -m 'Дополнить отчёт разбором конфликта откатом и проверкой API'
+git log --all --graph --date=short '--pretty=format:%h | %ad | %an | %s'
+git push -u origin master report
+git add README.md evidence deliverables
+git commit -m 'Завершить отчёт с форматированной историей и документами для сдачи'
+git push origin report
